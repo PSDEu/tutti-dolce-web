@@ -4,7 +4,7 @@ Lo que la web necesita de la pastelería (o de otras personas) para salir a prod
 
 ## De la clienta
 
-- [ ] **Permiso** para usar su marca y su logo en la web y en el curso público.
+- [x] **Permiso** para usar su marca y su logo en la web y en el curso público (confirmado el 2026-11-24).
 - [ ] **Precios reales** de cada opción (`src/app/core/catalogo/tortas.json`).
 - [ ] **Antelación** de cada opción, hora de corte y días cerrados.
 - [ ] **Reglas** de combinaciones imposibles (las actuales son de ejemplo: fruta fresca ≤ 2 pisos, corazón ≤ 3 pisos, pequeña ≤ 3 pisos, naked y glaseado solo lisos, fondant sin borlas).
@@ -13,7 +13,8 @@ Lo que la web necesita de la pastelería (o de otras personas) para salir a prod
 - [ ] **Datos de contacto**, dirección y horario.
 - [ ] 5–10 **publicaciones reales** suyas para enseñar a la IA su forma de escribir.
 - [ ] Descuento de cumpleaños (ahora 10 %) y sus condiciones.
-- [ ] Cuenta de **empresa** de Instagram (para publicar desde n8n).
+- [ ] Pasar la cuenta de Instagram **que ya existe** a cuenta profesional (empresa), vincularla a una página de Facebook y generar el token de la Graph API (para publicar desde n8n).
+- [ ] Decidir si se publica también en X y TikTok (el flujo actual solo prepara Instagram).
 
 ## Técnicos
 
