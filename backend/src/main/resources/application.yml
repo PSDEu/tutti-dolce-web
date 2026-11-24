@@ -1,0 +1,52 @@
+# Configuración de la API de Tutti Dolce.
+# Los secretos (contraseñas, claves de Brevo, clave del panel) llegan por variables de entorno:
+# ver backend/.env.example y docs/backend.md.
+spring:
+  application:
+    name: tutti-dolce-api
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/tuttidolce}
+    username: ${DB_USER:tuttidolce}
+    password: ${DB_PASSWORD:tuttidolce}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+  jackson:
+    default-property-inclusion: non_null
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: ${PORT:8080}
+  error:
+    include-message: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+tutti:
+  # URL pública de la web (para los enlaces de los emails).
+  web-url: ${WEB_URL:http://localhost:4200}
+  # Clave del panel de la pastelería (/api/admin/**). Sin clave, el panel queda cerrado.
+  admin-key: ${ADMIN_KEY:}
+  email-pasteleria: ${EMAIL_PASTELERIA:}
+  zona-horaria: Europe/Madrid
+  brevo:
+    # Sin api-key los emails no se envían: se escriben en el log (modo desarrollo).
+    api-key: ${BREVO_API_KEY:}
+    remitente: ${BREVO_REMITENTE:hola@tuttidolce.es}
+    nombre-remitente: Tutti Dolce Pastelería
+    lista-newsletter: ${BREVO_LISTA_NEWSLETTER:0}
+  n8n:
+    # Webhook de n8n que recibe los eventos (pedido creado, diseño compartible…). Vacío = desactivado.
+    webhook-url: ${N8N_WEBHOOK_URL:}
+  cumpleanos:
+    descuento: 10
+    cron: "0 0 9 * * *"

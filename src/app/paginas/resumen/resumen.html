@@ -9,7 +9,7 @@
         La pastelería revisará tu diseño y te escribirá a <strong>{{ p.email }}</strong> para confirmarlo y darte el
         precio final. Entrega prevista: <strong>{{ p.fechaEntrega | date: 'EEEE d MMMM' }}</strong>.
       </p>
-      <a [routerLink]="['/pedido', p.codigo]" [queryParams]="{ email: p.email }" class="boton">Seguir mi pedido</a>
+      <a [routerLink]="['/pedido', p.codigo]" [queryParams]="{ t: p.tokenSeguimiento }" class="boton">Seguir mi pedido</a>
       <a routerLink="/" class="boton secundario">Volver al inicio</a>
     </section>
   } @else {

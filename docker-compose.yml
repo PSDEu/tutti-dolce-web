@@ -1,0 +1,63 @@
+# Entorno completo de Tutti Dolce: base de datos, API y n8n.
+#   docker compose up -d db            → solo PostgreSQL (para desarrollar la API con ./mvnw spring-boot:run)
+#   docker compose up -d               → todo
+# Los secretos van en un archivo .env junto a este (ver backend/.env.example). No se sube a git.
+services:
+  db:
+    image: postgres:19
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tuttidolce
+      POSTGRES_USER: tuttidolce
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-tuttidolce}
+    ports:
+      - "5432:5432"
+    volumes:
+      - datos-db:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tuttidolce -d tuttidolce"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/tuttidolce
+      DB_USER: tuttidolce
+      DB_PASSWORD: ${DB_PASSWORD:-tuttidolce}
+      ADMIN_KEY: ${ADMIN_KEY:-}
+      EMAIL_PASTELERIA: ${EMAIL_PASTELERIA:-}
+      BREVO_API_KEY: ${BREVO_API_KEY:-}
+      BREVO_REMITENTE: ${BREVO_REMITENTE:-}
+      BREVO_LISTA_NEWSLETTER: ${BREVO_LISTA_NEWSLETTER:-0}
+      N8N_WEBHOOK_URL: http://n8n:5678/webhook/tutti-dolce
+      WEB_URL: ${WEB_URL:-http://localhost:4200}
+    ports:
+      - "8080:8080"
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    restart: unless-stopped
+    environment:
+      GENERIC_TIMEZONE: Europe/Madrid
+      TZ: Europe/Madrid
+      # El flujo lee estas variables con $env (claves de Claude, del panel e Instagram).
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      TUTTI_API_URL: http://api:8080
+      TUTTI_ADMIN_KEY: ${ADMIN_KEY:-}
+      INSTAGRAM_USER_ID: ${INSTAGRAM_USER_ID:-}
+      INSTAGRAM_TOKEN: ${INSTAGRAM_TOKEN:-}
+    ports:
+      - "5678:5678"
+    volumes:
+      - datos-n8n:/home/node/.n8n
+      - ./automatizaciones/n8n:/flujos:ro
+
+volumes:
+  datos-db:
+  datos-n8n:

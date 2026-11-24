@@ -83,6 +83,7 @@ export class MiCuenta {
   }
 
   protected seguir(): void {
-    this.router.navigate(['/pedido', this.codigo.trim().toUpperCase()], { queryParams: { email: this.email.trim() } });
+    // El email viaja en el estado de la navegación, no en la URL.
+    this.router.navigate(['/pedido', this.codigo.trim().toUpperCase()], { state: { email: this.email.trim() } });
   }
 }

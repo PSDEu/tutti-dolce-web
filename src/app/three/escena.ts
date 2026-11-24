@@ -184,6 +184,11 @@ export class EscenaTorta {
 
   /** Imagen PNG de lo que se ve ahora (para el resumen y el pedido). */
   capturar(): string {
+    // Si alguna pieza aún está entrando, se coloca en su sitio antes de la foto.
+    for (const a of this.animaciones) {
+      this.aplicarEntrada(a.parte, 1);
+    }
+    this.animaciones = [];
     this.renderer.render(this.escena, this.camara);
     return this.lienzo.toDataURL('image/png');
   }

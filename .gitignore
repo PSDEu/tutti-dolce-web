@@ -43,3 +43,8 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 .claude/settings.local.json
+
+# Secretos y compilados del backend
+.env
+backend/.env
+backend/target/

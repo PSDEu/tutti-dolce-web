@@ -69,7 +69,8 @@ import { ApiService, ESTADOS_PEDIDO, Pedido } from '../../core/api/api.service';
 })
 export class Seguimiento {
   readonly codigo = input.required<string>();
-  readonly email = input<string>('');
+  /** Token del enlace del email (`?t=…`). */
+  readonly t = input<string>();
   private readonly api = inject(ApiService);
   protected readonly estados = ESTADOS_PEDIDO;
   protected readonly pedido = signal<Pedido | null>(null);
@@ -78,7 +79,9 @@ export class Seguimiento {
 
   constructor() {
     effect(() => {
-      this.api.consultarPedido(this.codigo(), this.email()).subscribe({
+      // Desde "Mi cuenta" llega el email en el estado de la navegación (no en la URL).
+      const email = (history.state as { email?: string } | null)?.email;
+      this.api.consultarPedido(this.codigo(), { email, token: this.t() }).subscribe({
         next: (p) => this.pedido.set(p),
         error: () => this.error.set(true),
       });

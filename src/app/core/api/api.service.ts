@@ -53,6 +53,7 @@ export interface Pedido {
   ficha: LineaFicha[];
   diseno: DisenoTorta;
   imagen?: string | null;
+  tokenSeguimiento?: string;
   creado: string;
   historial: CambioEstado[];
 }
@@ -101,9 +102,13 @@ export class ApiService {
     return this.http.post<Pedido>(`${this.base}/pedidos`, p);
   }
 
-  consultarPedido(codigo: string, email: string): Observable<Pedido> {
+  /** Consulta con el email del pedido o con el token del enlace (`acceso`). Van en cabeceras, no en la URL. */
+  consultarPedido(codigo: string, acceso: { email?: string; token?: string }): Observable<Pedido> {
+    const cabeceras: Record<string, string> = {};
+    if (acceso.email) cabeceras['X-Email'] = acceso.email;
+    if (acceso.token) cabeceras['X-Token'] = acceso.token;
     return this.http.get<Pedido>(`${this.base}/pedidos/${encodeURIComponent(codigo)}`, {
-      headers: new HttpHeaders({ 'X-Email': email }),
+      headers: new HttpHeaders(cabeceras),
     });
   }
 
