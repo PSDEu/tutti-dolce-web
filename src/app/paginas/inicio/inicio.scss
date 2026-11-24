@@ -1,0 +1,163 @@
+/* La portada mide 3 pantallas: mientras se recorre, el contenido queda fijo (sticky)
+   y el scroll solo sirve para montar la torta. */
+.portada {
+  height: 320vh;
+  position: relative;
+}
+
+.fija {
+  position: sticky;
+  top: var(--alto-cabecera);
+  height: calc(100dvh - var(--alto-cabecera));
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  align-items: center;
+  width: min(100% - 2rem, var(--ancho-max));
+  margin-inline: auto;
+}
+
+.lienzo {
+  height: 100%;
+  min-height: 0;
+}
+
+.antetitulo {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.8rem;
+  color: var(--rosa-profundo);
+}
+
+.fase {
+  font-family: var(--fuente-titulos);
+  font-style: italic;
+  font-size: 1.6rem;
+  color: var(--rosa-profundo);
+  min-height: 2.2em;
+}
+
+.cta {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+  pointer-events: none;
+
+  &.visible {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
+}
+
+.baja {
+  color: var(--salvia-oscuro);
+  font-size: 0.9rem;
+  animation: flotar 1.6s ease-in-out infinite;
+}
+
+@keyframes flotar {
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+@media (max-width: 760px) {
+  .fija {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    text-align: center;
+    padding-top: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .fase {
+    font-size: 1.2rem;
+    min-height: 1.6em;
+    margin: 0.2rem 0;
+  }
+}
+
+.bloque {
+  padding: 5rem 0 2rem;
+}
+
+.intro {
+  max-width: 60ch;
+}
+
+.pasos {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin: 2rem 0;
+
+  @media (max-width: 760px) {
+    grid-template-columns: 1fr;
+  }
+
+  .num {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--rubor);
+    color: var(--rosa-profundo);
+    font-family: var(--fuente-titulos);
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+}
+
+.mas {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-weight: 700;
+}
+
+.historia {
+  margin-top: 5rem;
+  padding: 4rem 0;
+  background: var(--rubor);
+
+  .dos-columnas {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .rosa {
+    width: 100%;
+    max-width: 260px;
+    justify-self: center;
+  }
+
+  @media (max-width: 760px) {
+    .dos-columnas {
+      grid-template-columns: 1fr;
+    }
+
+    .rosa {
+      max-width: 140px;
+    }
+  }
+}
+
+.registro .tarjeta {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: linear-gradient(135deg, #fff, var(--crema));
+}

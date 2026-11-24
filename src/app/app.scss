@@ -1,0 +1,155 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+.saltar-contenido {
+  position: absolute;
+  left: -999px;
+
+  &:focus {
+    left: 1rem;
+    top: 1rem;
+    z-index: 100;
+    background: var(--blanco);
+    padding: 0.5rem 1rem;
+  }
+}
+
+.cabecera {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--alto-cabecera);
+  background: rgba(251, 247, 244, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rubor);
+}
+
+.fila {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.marca {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.15rem;
+  height: 40px;
+
+  img {
+    height: 100%;
+    width: auto;
+  }
+
+  .marca-tutti {
+    height: 85%;
+  }
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+
+  a:not(.boton) {
+    color: var(--salvia-oscuro);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.3rem 0;
+    border-bottom: 2px solid transparent;
+
+    &.activo,
+    &:hover {
+      border-color: var(--rosa);
+    }
+  }
+}
+
+.hamburguesa {
+  display: none;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: var(--salvia-oscuro);
+  cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .hamburguesa {
+    display: block;
+  }
+
+  nav {
+    position: absolute;
+    top: var(--alto-cabecera);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0.5rem 1rem 1rem;
+    background: var(--crema);
+    border-bottom: 1px solid var(--rubor);
+    display: none;
+
+    &.abierto {
+      display: flex;
+    }
+
+    a:not(.boton) {
+      padding: 0.8rem 0;
+    }
+
+    .boton {
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+.pie {
+  margin-top: 4rem;
+  padding: 3rem 0 1.5rem;
+  background: var(--rubor);
+  color: var(--tinta);
+
+  .columnas {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2rem;
+
+    @media (max-width: 760px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  a {
+    display: block;
+    color: var(--salvia-oscuro);
+    margin-bottom: 0.3rem;
+  }
+
+  .pie-logo {
+    height: 48px;
+    width: auto;
+    margin-bottom: 0.5rem;
+  }
+
+  .copy {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    color: var(--rosa-profundo);
+  }
+}

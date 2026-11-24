@@ -1,0 +1,18 @@
+<div class="stage" [style.width]="tamano()" role="img" aria-label="Tutti Dolce Pastelería">
+  <div class="disco"></div>
+  @for (capa of capas; track capa.id) {
+    <img
+      class="capa {{ capa.id }}"
+      [src]="'logo/' + capa.id + '.png'"
+      alt=""
+      [style.left.%]="capa.left"
+      [style.top.%]="capa.top"
+      [style.width.%]="capa.width"
+      [style.height.%]="capa.height"
+    />
+  }
+  <div class="brillo-wrap"><div class="brillo"></div></div>
+</div>
+@if (modo() === 'intro') {
+  <button type="button" class="saltar" (click)="saltar(); $event.stopPropagation()">Saltar intro</button>
+}

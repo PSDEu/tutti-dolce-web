@@ -1,0 +1,135 @@
+<div class="contenedor pagina">
+  <h1>Panel de la pastelería</h1>
+
+  @if (!entrado()) {
+    <form class="tarjeta acceso" (ngSubmit)="entrar()">
+      <div class="campo">
+        <label for="clave">Clave de acceso</label>
+        <input id="clave" name="clave" type="password" required autocomplete="current-password" [(ngModel)]="clave" />
+      </div>
+      @if (error()) {
+        <p class="aviso error" role="alert">{{ error() }}</p>
+      }
+      <button type="submit" class="boton salvia" [disabled]="!clave">Entrar</button>
+    </form>
+  } @else {
+    <div class="pestanas" role="tablist">
+      <button type="button" role="tab" [attr.aria-selected]="pestana() === 'pedidos'" (click)="ver('pedidos')">Pedidos</button>
+      <button type="button" role="tab" [attr.aria-selected]="pestana() === 'disenos'" (click)="ver('disenos')">Diseños para la galería</button>
+      <button type="button" role="tab" [attr.aria-selected]="pestana() === 'borradores'" (click)="ver('borradores')">Borradores para redes</button>
+      <button type="button" class="salir" (click)="salir()">Salir</button>
+    </div>
+    @if (error()) {
+      <p class="aviso error" role="alert">{{ error() }}</p>
+    }
+
+    @switch (pestana()) {
+      @case ('pedidos') {
+        @for (p of pedidos(); track p.id) {
+          <article class="tarjeta pedido">
+            <header (click)="abierto.set(abierto() === p.id ? null : p.id)">
+              <strong>{{ p.codigo }}</strong>
+              <span class="estado {{ p.estado }}">{{ nombreEstado(p.estado) }}</span>
+              <span>{{ p.fechaEntrega | date: 'EEE d MMM' }} · {{ p.entrega === 'RECOGIDA' ? 'Recogida' : 'Domicilio' }}</span>
+              <span>{{ p.nombre }}</span>
+              <span>{{ p.precioConfirmado ?? p.precioEstimado | currency: 'EUR' }}</span>
+            </header>
+            @if (abierto() === p.id) {
+              <div class="detalle">
+                @if (p.imagen) {
+                  <img [src]="p.imagen" alt="Diseño" />
+                }
+                <div>
+                  <h3>Orden de trabajo</h3>
+                  <dl>
+                    @for (l of p.ficha; track l.etiqueta) {
+                      <dt>{{ l.etiqueta }}</dt>
+                      <dd>{{ l.valor }}</dd>
+                    }
+                  </dl>
+                  <p><strong>Cliente:</strong> {{ p.nombre }} · {{ p.email }} · {{ p.telefono }}</p>
+                  @if (p.direccion) {
+                    <p><strong>Dirección:</strong> {{ p.direccion }}</p>
+                  }
+                  @if (p.notas) {
+                    <p><strong>Notas:</strong> {{ p.notas }}</p>
+                  }
+                  <h3>Historial</h3>
+                  <ul class="historial">
+                    @for (h of p.historial; track h.fecha) {
+                      <li>{{ h.fecha | date: 'd MMM HH:mm' }} · {{ nombreEstado(h.estado) }} @if (h.nota) { — {{ h.nota }} }</li>
+                    }
+                  </ul>
+                  <div class="cambio">
+                    <div class="campo">
+                      <label [for]="'estado-' + p.id">Nuevo estado</label>
+                      <select [id]="'estado-' + p.id" [name]="'estado-' + p.id" [(ngModel)]="cambios[p.id].estado">
+                        @for (e of estados; track e.id) {
+                          <option [value]="e.id">{{ e.nombre }}</option>
+                        }
+                      </select>
+                    </div>
+                    <div class="campo">
+                      <label [for]="'precio-' + p.id">Precio final (€)</label>
+                      <input [id]="'precio-' + p.id" type="number" min="0" step="0.5" [(ngModel)]="cambios[p.id].precio" />
+                    </div>
+                    <div class="campo ancho">
+                      <label [for]="'nota-' + p.id">Nota para el cliente (opcional)</label>
+                      <input [id]="'nota-' + p.id" [(ngModel)]="cambios[p.id].nota" />
+                    </div>
+                    <button type="button" class="boton pequeno" (click)="guardarEstado(p)">Guardar</button>
+                  </div>
+                </div>
+              </div>
+            }
+          </article>
+        } @empty {
+          <p>No hay pedidos todavía.</p>
+        }
+      }
+      @case ('disenos') {
+        <p class="nota">Solo aparecen diseños cuyos clientes marcaron "Permito que la pastelería comparta mi diseño".</p>
+        <div class="rejilla">
+          @for (d of disenos(); track d.id) {
+            <article class="tarjeta">
+              @if (d.imagen) {
+                <img [src]="d.imagen" [alt]="d.nombre" />
+              }
+              <h3>{{ d.nombre }}</h3>
+              <p>{{ d.aprobado ? 'Publicado en la galería' : 'Pendiente de aprobar' }}</p>
+              @if (d.aprobado) {
+                <button type="button" class="boton secundario pequeno" (click)="moderar(d, false)">Retirar</button>
+              } @else {
+                <button type="button" class="boton pequeno" (click)="moderar(d, true)">Publicar</button>
+              }
+            </article>
+          } @empty {
+            <p>No hay diseños compartibles.</p>
+          }
+        </div>
+      }
+      @case ('borradores') {
+        <p class="nota">Textos escritos por la IA con tu voz. Corrige lo que quieras y apruébalo: solo entonces se publica.</p>
+        @for (b of borradores(); track b.id) {
+          <article class="tarjeta borrador">
+            @if (b.imagen) {
+              <img [src]="b.imagen" alt="Diseño del post" />
+            }
+            <div>
+              <p class="meta">{{ b.red }} · {{ b.creado | date: 'd MMM HH:mm' }} · <strong>{{ b.estado }}</strong></p>
+              <textarea rows="6" [(ngModel)]="b.texto" [disabled]="b.estado !== 'PENDIENTE'" aria-label="Texto del post"></textarea>
+              @if (b.estado === 'PENDIENTE') {
+                <div class="acciones">
+                  <button type="button" class="boton pequeno" (click)="decidir(b, 'APROBADO')">Aprobar y publicar</button>
+                  <button type="button" class="boton secundario pequeno" (click)="decidir(b, 'RECHAZADO')">Descartar</button>
+                </div>
+              }
+            </div>
+          </article>
+        } @empty {
+          <p>No hay borradores.</p>
+        }
+      }
+    }
+  }
+</div>

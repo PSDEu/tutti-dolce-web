@@ -1,0 +1,221 @@
+@let dis = s.diseno();
+
+<div class="configurador" [class.panel-cerrado]="!panelAbierto()">
+  <section class="visor" aria-label="Vista 3D de tu torta">
+    <td-torta-3d #torta [diseno]="dis" [corte]="verCorte()" controles />
+    <p class="pista">Arrastra para girar · pellizca para acercar</p>
+    @if (enlaceInvalido()) {
+      <p class="aviso error flotante">El enlace no es válido; empezamos con una torta nueva.</p>
+    }
+    @for (a of s.ajustes(); track a.regla) {
+      <p class="aviso flotante" role="status">{{ a.mensaje }}</p>
+    }
+  </section>
+
+  <section class="panel" aria-label="Pasos del diseño">
+    <button type="button" class="asa" (click)="panelAbierto.set(!panelAbierto())" [attr.aria-expanded]="panelAbierto()">
+      <span class="barrita" aria-hidden="true"></span>
+      <span class="solo-lectores">{{ panelAbierto() ? 'Ocultar' : 'Mostrar' }} opciones</span>
+    </button>
+
+    <ol class="fichas-pasos">
+      @for (p of pasos; track p.id; let i = $index) {
+        <li>
+          <button type="button" [class.activo]="p.id === paso()" [attr.aria-current]="p.id === paso() ? 'step' : null" (click)="irA(p.id)">
+            <span class="num">{{ i + 1 }}</span> {{ p.titulo }}
+          </button>
+        </li>
+      }
+    </ol>
+
+    <div class="contenido-paso">
+      <h2>{{ pasos[indice()].titulo }}</h2>
+
+      @switch (paso()) {
+        @case ('forma') {
+          <div class="opciones">
+            @for (f of c.formas; track f.id) {
+              <button type="button" class="opcion" [class.elegida]="dis.forma === f.id" [disabled]="!s.permitido('forma', f.id)" (click)="s.cambiar('forma', f.id)">
+                <span class="icono-forma {{ f.id }}" aria-hidden="true"></span>
+                <span>{{ f.nombre }}</span>
+                @if (f.precio) { <small>+{{ f.precio | currency: c.moneda }}</small> }
+              </button>
+            }
+          </div>
+          <h3>Tamaño</h3>
+          <div class="opciones">
+            @for (t of c.tamanos; track t.id) {
+              <button type="button" class="opcion" [class.elegida]="dis.tamano === t.id" [disabled]="!s.permitido('tamano', t.id)" (click)="s.cambiar('tamano', t.id)">
+                <span>{{ t.nombre }}</span>
+                <small>{{ t.diametroCm }} cm · {{ t.raciones }} raciones</small>
+              </button>
+            }
+          </div>
+        }
+        @case ('bizcocho') {
+          <div class="opciones">
+            @for (b of c.bizcochos; track b.id) {
+              <button type="button" class="opcion" [class.elegida]="dis.bizcocho === b.id" (click)="s.cambiar('bizcocho', b.id)">
+                <span class="muestra" [style.background]="b.color" aria-hidden="true"></span>
+                <span>{{ b.nombre }}</span>
+                @if (b.precio) { <small>+{{ b.precio | currency: c.moneda }}</small> }
+              </button>
+            }
+          </div>
+        }
+        @case ('pisos') {
+          <div class="opciones">
+            @for (n of pisosPosibles(); track n) {
+              <button type="button" class="opcion" [class.elegida]="dis.pisos === n" [disabled]="!s.permitido('pisos', n)" (click)="s.cambiar('pisos', n)">
+                <span class="grande">{{ n }}</span>
+                <span>{{ n === 1 ? 'piso' : 'pisos' }}</span>
+              </button>
+            }
+          </div>
+          @for (i of s.infracciones(); track i.regla) {
+            <p class="aviso">{{ i.mensaje }}</p>
+          }
+          <p class="nota">Algunas combinaciones limitan los pisos (por ejemplo, la fruta fresca no aguanta mucho peso).</p>
+        }
+        @case ('relleno') {
+          <div class="opciones">
+            @if (dis.pisos === 1) {
+              <button type="button" class="opcion" [class.elegida]="dis.relleno === null" (click)="s.cambiar('relleno', null)">
+                <span>Sin relleno</span>
+              </button>
+            }
+            @for (r of c.rellenos; track r.id) {
+              <button type="button" class="opcion" [class.elegida]="dis.relleno === r.id" (click)="s.cambiar('relleno', r.id)">
+                <span class="muestra" [style.background]="r.color" aria-hidden="true"></span>
+                <span>{{ r.nombre }}</span>
+                @if (r.frutaFresca) { <small>Fruta fresca</small> }
+              </button>
+            }
+          </div>
+          @if (dis.pisos === 1) {
+            <p class="nota">Con un solo piso puedes elegir si quieres relleno dentro: cortamos el bizcocho en dos.</p>
+          }
+        }
+        @case ('cobertura') {
+          <div class="opciones">
+            @for (cb of c.coberturas; track cb.id) {
+              <button type="button" class="opcion ancha" [class.elegida]="dis.cobertura === cb.id" (click)="s.cambiar('cobertura', cb.id)">
+                <span>{{ cb.nombre }}</span>
+                <small>{{ cb.descripcion }}</small>
+              </button>
+            }
+          </div>
+          @if (coberturaActual().colores.length > 1) {
+            <h3>Color</h3>
+            <div class="colores" role="radiogroup" aria-label="Color de la cobertura">
+              @for (col of coberturaActual().colores; track col) {
+                <button type="button" role="radio" class="color" [style.background]="col" [attr.aria-checked]="dis.colorCobertura === col" [attr.aria-label]="col" (click)="s.cambiar('colorCobertura', col)"></button>
+              }
+            </div>
+          }
+        }
+        @case ('acabado') {
+          <div class="opciones">
+            @for (a of c.acabados; track a.id) {
+              <button type="button" class="opcion" [class.elegida]="dis.acabado === a.id" [disabled]="!s.permitido('acabado', a.id)" (click)="s.cambiar('acabado', a.id)">
+                <span>{{ a.nombre }}</span>
+                @if (a.precio) { <small>+{{ a.precio | currency: c.moneda }}</small> }
+              </button>
+            }
+          </div>
+          <h3>Drip (chorreado)</h3>
+          <div class="opciones">
+            <button type="button" class="opcion" [class.elegida]="dis.drip === null" (click)="s.cambiar('drip', null)">Sin drip</button>
+            @for (dr of c.drips; track dr.id) {
+              <button type="button" class="opcion" [class.elegida]="dis.drip === dr.id" (click)="s.cambiar('drip', dr.id)">
+                <span class="muestra" [style.background]="dr.color" aria-hidden="true"></span>
+                <span>{{ dr.nombre }}</span>
+              </button>
+            }
+          </div>
+        }
+        @case ('manga') {
+          <p class="nota">Puedes elegir varias.</p>
+          <div class="opciones">
+            @for (m of c.decoracionesManga; track m.id) {
+              <button type="button" class="opcion" [class.elegida]="dis.decoraciones.includes(m.id)" [attr.aria-pressed]="dis.decoraciones.includes(m.id)" [disabled]="!dis.decoraciones.includes(m.id) && !s.permitido('decoraciones', [...dis.decoraciones, m.id])" (click)="s.alternar('decoraciones', m.id)">
+                <span>{{ m.nombre }}</span>
+                <small>+{{ m.precio | currency: c.moneda }}</small>
+              </button>
+            }
+          </div>
+          @if (dis.decoraciones.length) {
+            <h3>Color de la manga</h3>
+            <div class="colores" role="radiogroup" aria-label="Color de la decoración">
+              @for (col of c.coloresManga; track col) {
+                <button type="button" role="radio" class="color" [style.background]="col" [attr.aria-checked]="dis.colorManga === col" [attr.aria-label]="col" (click)="s.cambiar('colorManga', col)"></button>
+              }
+            </div>
+          }
+        }
+        @case ('toppers') {
+          <p class="nota">Puedes elegir varios.</p>
+          <div class="opciones">
+            @for (t of c.toppers; track t.id) {
+              <button type="button" class="opcion" [class.elegida]="dis.toppers.includes(t.id)" [attr.aria-pressed]="dis.toppers.includes(t.id)" (click)="s.alternar('toppers', t.id)">
+                <span>{{ t.nombre }}</span>
+                <small>+{{ t.precio | currency: c.moneda }}@if (t.antelacionDias) { · +{{ t.antelacionDias }} día(s) }</small>
+              </button>
+            }
+          </div>
+        }
+        @case ('mensaje') {
+          <div class="campo">
+            <label for="mensaje">Texto ({{ dis.mensaje.length }}/{{ c.mensaje.maxCaracteres }})</label>
+            <input id="mensaje" type="text" [value]="dis.mensaje" [maxLength]="c.mensaje.maxCaracteres" placeholder="Feliz cumpleaños, Ana" (input)="cambiarMensaje($event)" />
+          </div>
+          <p class="nota">
+            @if (dis.toppers.includes('cartel')) { Irá en el cartel. } @else { Irá escrito sobre la torta. Si lo prefieres en un cartel, elígelo en Toppers. }
+            Cuesta {{ c.mensaje.precio | currency: c.moneda }}.
+          </p>
+        }
+      }
+
+      <div class="navegacion">
+        <button type="button" class="boton secundario pequeno" [disabled]="indice() === 0" (click)="mover(-1)">Anterior</button>
+        @if (indice() < pasos.length - 1) {
+          <button type="button" class="boton pequeno" (click)="mover(1)">Siguiente</button>
+        } @else {
+          <button type="button" class="boton pequeno" [disabled]="s.infracciones().length > 0" (click)="irAlResumen(torta)">Ver resumen</button>
+        }
+      </div>
+      <div class="acciones-secundarias">
+        <button type="button" class="enlace" (click)="guardar()">{{ guardado() ? '¡Guardado!' : 'Guardar diseño' }}</button>
+        <button type="button" class="enlace" (click)="compartir()">{{ enlaceCopiado() ? '¡Enlace copiado!' : 'Compartir enlace' }}</button>
+        <button type="button" class="enlace" (click)="s.reiniciar(); paso.set('forma')">Empezar de nuevo</button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="barra" aria-label="Precio y fecha">
+    <button type="button" class="precio" (click)="verDesglose.set(!verDesglose())" [attr.aria-expanded]="verDesglose()">
+      <small>Precio</small>
+      <strong>{{ s.presupuesto().total | currency: c.moneda }}</strong>
+    </button>
+    <div class="fecha">
+      <small>Lista desde</small>
+      <strong>{{ s.fechaMinima() | date: 'EEE d MMM' }}</strong>
+    </div>
+    <button type="button" class="boton secundario pequeno" [attr.aria-pressed]="verCorte()" (click)="verCorte.set(!verCorte())">
+      {{ verCorte() ? 'Cerrar corte' : 'Ver corte' }}
+    </button>
+    <button type="button" class="boton pequeno resumen" [disabled]="s.infracciones().length > 0" (click)="irAlResumen(torta)">Encargar</button>
+
+    @if (verDesglose()) {
+      <div class="desglose tarjeta">
+        <ul>
+          @for (l of s.presupuesto().lineas; track l.concepto) {
+            <li><span>{{ l.concepto }}</span><span>{{ l.importe | currency: c.moneda }}</span></li>
+          }
+        </ul>
+        <p class="nota">Precio orientativo. La pastelería lo confirma al aceptar el pedido. Necesita {{ s.antelacion() }} días de preparación.</p>
+        <a routerLink="/mi-cuenta" class="nota">Ver mis diseños guardados</a>
+      </div>
+    }
+  </aside>
+</div>

@@ -1,0 +1,119 @@
+@let c = s.catalogo;
+
+<div class="contenedor pagina">
+  @if (pedido(); as p) {
+    <section class="tarjeta enviado" role="status">
+      <h1>¡Solicitud enviada!</h1>
+      <p>Tu código de pedido es <strong class="codigo">{{ p.codigo }}</strong>.</p>
+      <p>
+        La pastelería revisará tu diseño y te escribirá a <strong>{{ p.email }}</strong> para confirmarlo y darte el
+        precio final. Entrega prevista: <strong>{{ p.fechaEntrega | date: 'EEEE d MMMM' }}</strong>.
+      </p>
+      <a [routerLink]="['/pedido', p.codigo]" [queryParams]="{ email: p.email }" class="boton">Seguir mi pedido</a>
+      <a routerLink="/" class="boton secundario">Volver al inicio</a>
+    </section>
+  } @else {
+    <h1>Resumen de tu torta</h1>
+
+    <div class="rejilla">
+      <section class="imagen tarjeta" aria-label="Tu diseño">
+        @if (imagen()) {
+          <img [src]="imagen()" alt="Imagen de tu diseño en 3D" />
+        } @else {
+          <td-torta-3d [diseno]="s.diseno()" controles />
+        }
+        <a routerLink="/configurador" class="editar">← Seguir editando</a>
+      </section>
+
+      <section class="ficha tarjeta" aria-labelledby="ficha-titulo">
+        <h2 id="ficha-titulo">Ficha técnica</h2>
+        <dl>
+          @for (l of ficha(); track l.etiqueta) {
+            <dt>{{ l.etiqueta }}</dt>
+            <dd>{{ l.valor }}</dd>
+          }
+        </dl>
+        <div class="totales">
+          <div>
+            <small>Precio orientativo</small>
+            <strong>{{ s.presupuesto().total | currency: c.moneda }}</strong>
+          </div>
+          <div>
+            <small>Lista desde</small>
+            <strong>{{ s.fechaMinima() | date: 'EEE d MMM' }}</strong>
+          </div>
+        </div>
+        @for (i of s.infracciones(); track i.regla) {
+          <p class="aviso error">{{ i.mensaje }}</p>
+        }
+        <div class="acciones">
+          <button type="button" class="boton secundario pequeno" (click)="guardar()">{{ guardado() ? '¡Guardado!' : 'Guardar' }}</button>
+          <button type="button" class="boton secundario pequeno" (click)="compartir()">{{ copiado() ? '¡Enlace copiado!' : 'Compartir con enlace' }}</button>
+        </div>
+      </section>
+    </div>
+
+    <form class="tarjeta formulario" #f="ngForm" (ngSubmit)="f.valid && enviar()" aria-labelledby="form-titulo">
+      <h2 id="form-titulo">Enviar la solicitud a la pastelería</h2>
+      <p class="nota">Aún no se paga nada: la pastelería confirma tu pedido y el precio final.</p>
+
+      <div class="columnas">
+        <div class="campo">
+          <label for="fecha">Fecha de entrega</label>
+          <input id="fecha" name="fecha" type="date" required [min]="s.fechaMinimaIso()" [(ngModel)]="datos.fecha" />
+          @if (datos.fecha && !fechaCorrecta(datos.fecha)) {
+            <small class="error-campo">Esa fecha no es posible (antes de la mínima o día cerrado).</small>
+          }
+        </div>
+        <div class="campo">
+          <label for="entrega">Entrega</label>
+          <select id="entrega" name="entrega" [(ngModel)]="datos.entrega">
+            <option value="RECOGIDA">Recojo en la pastelería</option>
+            <option value="DOMICILIO">Envío a domicilio</option>
+          </select>
+        </div>
+      </div>
+      @if (datos.entrega === 'DOMICILIO') {
+        <div class="campo">
+          <label for="direccion">Dirección de entrega</label>
+          <input id="direccion" name="direccion" required autocomplete="street-address" [(ngModel)]="datos.direccion" />
+        </div>
+      }
+
+      <div class="columnas">
+        <div class="campo">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" name="nombre" required autocomplete="name" [(ngModel)]="datos.nombre" />
+        </div>
+        <div class="campo">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required email autocomplete="email" [(ngModel)]="datos.email" />
+        </div>
+        <div class="campo">
+          <label for="telefono">Teléfono</label>
+          <input id="telefono" name="telefono" type="tel" required autocomplete="tel" [(ngModel)]="datos.telefono" />
+        </div>
+      </div>
+      <div class="campo">
+        <label for="notas">Notas para la pastelería (alergias, ideas…)</label>
+        <textarea id="notas" name="notas" rows="3" [(ngModel)]="datos.notas"></textarea>
+      </div>
+
+      <label class="casilla">
+        <input type="checkbox" name="permitePublicar" [(ngModel)]="datos.permitePublicar" />
+        <span>Permito que la pastelería comparta mi diseño (sin mis datos) en la web y en redes sociales.</span>
+      </label>
+      <label class="casilla">
+        <input type="checkbox" name="aceptaPrivacidad" required [(ngModel)]="datos.aceptaPrivacidad" />
+        <span>He leído la <a routerLink="/privacidad" target="_blank">política de privacidad</a> y acepto que se usen mis datos para gestionar este pedido.</span>
+      </label>
+
+      @if (error()) {
+        <p class="aviso error" role="alert">{{ error() }}</p>
+      }
+      <button type="submit" class="boton" [disabled]="enviando() || !f.valid || s.infracciones().length > 0">
+        {{ enviando() ? 'Enviando…' : 'Enviar solicitud' }}
+      </button>
+    </form>
+  }
+</div>

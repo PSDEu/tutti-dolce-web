@@ -1,0 +1,72 @@
+<section class="portada" #portada aria-label="Así se monta una torta">
+  <div class="fija">
+    <div class="texto">
+      <p class="antetitulo">Tutti Dolce · Pastelería artesanal</p>
+      <h1>Tu torta, como la imaginas.</h1>
+      <p class="fase" aria-live="polite">{{ fases[faseActual()] }}</p>
+      <div class="cta" [class.visible]="progreso() > 0.96">
+        <a routerLink="/configurador" class="boton">Diseña la tuya</a>
+        <p>La ves en 3D, por dentro, con su precio y su fecha.</p>
+      </div>
+      @if (progreso() < 0.05) {
+        <p class="baja" aria-hidden="true">Desliza hacia abajo ↓</p>
+      }
+    </div>
+    <div class="lienzo">
+      <td-torta-3d [diseno]="torta" [montaje]="progreso()" />
+    </div>
+  </div>
+</section>
+
+<section class="contenedor bloque como" aria-labelledby="como-titulo">
+  <h2 id="como-titulo">Cómo funciona</h2>
+  <ol class="pasos">
+    <li>
+      <span class="num">1</span>
+      <h3>Diseñas</h3>
+      <p>Forma, bizcocho, pisos, relleno, cobertura y decoración. Cada cambio lo ves al instante en 3D, también por dentro.</p>
+    </li>
+    <li>
+      <span class="num">2</span>
+      <h3>Eliges la fecha</h3>
+      <p>Te decimos el precio y el primer día en que puede estar lista, según lo que necesite tu diseño.</p>
+    </li>
+    <li>
+      <span class="num">3</span>
+      <h3>La recoges o te la llevamos</h3>
+      <p>Recibimos tu diseño como una orden de trabajo clara, sin malentendidos, y te avisamos de cada paso.</p>
+    </li>
+  </ol>
+  <a routerLink="/configurador" class="boton">Empezar mi diseño</a>
+</section>
+
+<section class="contenedor bloque" aria-labelledby="disenos-titulo">
+  <h2 id="disenos-titulo">Diseños de nuestros clientes</h2>
+  <p class="intro">Inspírate y parte de uno: solo mostramos los que sus autores nos dejaron compartir.</p>
+  <td-tarjetas-disenos [limite]="4" />
+  <a routerLink="/galeria" class="mas">Ver toda la inspiración →</a>
+</section>
+
+<section class="historia" aria-labelledby="historia-titulo">
+  <div class="contenedor dos-columnas">
+    <div>
+      <h2 id="historia-titulo">Detrás de cada torta, una persona</h2>
+      <!-- TEXTO PROVISIONAL: sustituir por la historia real de la dueña. -->
+      <p>
+        Tutti Dolce nació en una cocina de casa, entre recetas heredadas y cumpleaños de amigos. Hoy seguimos
+        horneando cada torta a mano, una a una, con la misma ilusión del primer día.
+      </p>
+      <p>Por eso queremos que participes: que nos cuentes cómo la imaginas y que la veas antes de que la hagamos.</p>
+      <a routerLink="/nosotros" class="boton secundario">Conócenos</a>
+    </div>
+    <img src="logo/rose_tl.png" alt="" class="rosa" />
+  </div>
+</section>
+
+<section class="contenedor bloque registro" aria-labelledby="registro-titulo">
+  <div class="tarjeta">
+    <h2 id="registro-titulo">Únete gratis y recibe un regalo en tu cumpleaños</h2>
+    <p>Guarda tus diseños, sigue tus pedidos y recibe novedades (solo si quieres).</p>
+    <a routerLink="/membresia" class="boton salvia">Quiero unirme</a>
+  </div>
+</section>

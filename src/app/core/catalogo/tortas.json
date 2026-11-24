@@ -1,0 +1,161 @@
+{
+  "producto": "torta",
+  "version": 1,
+  "moneda": "EUR",
+  "nota": "VALORES DE EJEMPLO. Precios, antelaciones y reglas los define la clienta: sustituir antes de publicar.",
+  "pedido": {
+    "antelacionBaseDias": 2,
+    "horaCorte": 14,
+    "diasCerrados": [1],
+    "comentario": "diasCerrados usa 0=domingo ... 6=sábado. Un pedido hecho después de horaCorte cuenta desde el día siguiente."
+  },
+  "formas": [
+    { "id": "redonda", "nombre": "Redonda", "precio": 0, "antelacionDias": 0 },
+    { "id": "cuadrada", "nombre": "Cuadrada", "precio": 4, "antelacionDias": 0 },
+    { "id": "corazon", "nombre": "Corazón", "precio": 8, "antelacionDias": 1 }
+  ],
+  "tamanos": [
+    { "id": "s", "nombre": "Pequeña", "diametroCm": 16, "raciones": "6–8", "precio": 28, "factor": 1 },
+    { "id": "m", "nombre": "Mediana", "diametroCm": 20, "raciones": "10–12", "precio": 38, "factor": 1.4 },
+    { "id": "l", "nombre": "Grande", "diametroCm": 24, "raciones": "16–20", "precio": 52, "factor": 1.9 }
+  ],
+  "bizcochos": [
+    { "id": "vainilla", "nombre": "Vainilla", "color": "#F1D9A7", "precio": 0 },
+    { "id": "chocolate", "nombre": "Chocolate", "color": "#5A3A2B", "precio": 3 },
+    { "id": "red-velvet", "nombre": "Red velvet", "color": "#9E2B35", "precio": 4 },
+    { "id": "limon", "nombre": "Limón", "color": "#F3E08F", "precio": 2 },
+    { "id": "zanahoria", "nombre": "Zanahoria", "color": "#C9884A", "precio": 3 }
+  ],
+  "pisos": {
+    "min": 1,
+    "max": 4,
+    "precioPisoExtra": 9,
+    "antelacionPorPisoExtraDias": 0.5,
+    "comentario": "El precio del piso extra se multiplica por el factor del tamaño. La antelación extra se redondea hacia arriba."
+  },
+  "rellenos": [
+    { "id": "dulce-de-leche", "nombre": "Dulce de leche", "color": "#B0733A", "precio": 3, "frutaFresca": false },
+    { "id": "crema-vainilla", "nombre": "Crema de vainilla", "color": "#F6EBD0", "precio": 2, "frutaFresca": false },
+    { "id": "ganache-chocolate", "nombre": "Ganache de chocolate", "color": "#3F2519", "precio": 4, "frutaFresca": false },
+    { "id": "frutos-rojos", "nombre": "Frutos rojos frescos", "color": "#B8324A", "precio": 5, "frutaFresca": true },
+    { "id": "limon-curd", "nombre": "Lemon curd", "color": "#EBCB4E", "precio": 4, "frutaFresca": false }
+  ],
+  "coberturas": [
+    {
+      "id": "buttercream",
+      "nombre": "Buttercream",
+      "descripcion": "Crema de mantequilla, suave y fácil de decorar.",
+      "colores": ["#FBF3EA", "#EBDED8", "#CEA59D", "#A0A18F", "#F3E3B5"],
+      "precio": 6,
+      "antelacionDias": 0,
+      "rugosidad": 0.75,
+      "brillo": 0
+    },
+    {
+      "id": "fondant",
+      "nombre": "Fondant",
+      "descripcion": "Liso, tipo plastilina. Acabado perfecto.",
+      "colores": ["#FFFFFF", "#EBDED8", "#CEA59D", "#A0A18F", "#C7B9A7"],
+      "precio": 12,
+      "antelacionDias": 1,
+      "rugosidad": 0.55,
+      "brillo": 0.1
+    },
+    {
+      "id": "ganache",
+      "nombre": "Ganache",
+      "descripcion": "Chocolate y nata. Intenso.",
+      "colores": ["#3F2519", "#6B4430", "#F4E9D8"],
+      "precio": 9,
+      "antelacionDias": 0,
+      "rugosidad": 0.45,
+      "brillo": 0.3
+    },
+    {
+      "id": "glaseado",
+      "nombre": "Glaseado",
+      "descripcion": "Líquido y brillante.",
+      "colores": ["#FFFFFF", "#EBDED8", "#CEA59D", "#3F2519"],
+      "precio": 7,
+      "antelacionDias": 0,
+      "rugosidad": 0.15,
+      "brillo": 1
+    },
+    {
+      "id": "naked",
+      "nombre": "Naked cake",
+      "descripcion": "Sin cobertura lateral: se ven las capas.",
+      "colores": ["#FBF3EA"],
+      "precio": 3,
+      "antelacionDias": 0,
+      "rugosidad": 0.8,
+      "brillo": 0
+    }
+  ],
+  "acabados": [
+    { "id": "liso", "nombre": "Liso", "precio": 0 },
+    { "id": "rustico", "nombre": "Rústico", "precio": 2 },
+    { "id": "texturizado", "nombre": "Texturizado (rayas)", "precio": 3 }
+  ],
+  "drips": [
+    { "id": "chocolate", "nombre": "Drip de chocolate", "color": "#3F2519", "precio": 5 },
+    { "id": "caramelo", "nombre": "Drip de caramelo", "color": "#B9772F", "precio": 5 },
+    { "id": "chocolate-blanco", "nombre": "Drip de chocolate blanco", "color": "#F4E9D8", "precio": 5 }
+  ],
+  "decoracionesManga": [
+    { "id": "borlas", "nombre": "Borlas en el borde superior", "precio": 4 },
+    { "id": "rosetones", "nombre": "Rosetones encima", "precio": 6 },
+    { "id": "borde", "nombre": "Borde en la base", "precio": 3 }
+  ],
+  "coloresManga": ["#FFFFFF", "#EBDED8", "#CEA59D", "#A0A18F", "#8E5E56", "#3F2519"],
+  "toppers": [
+    { "id": "fresas", "nombre": "Fresas frescas", "precio": 5, "antelacionDias": 0, "frutaFresca": true },
+    { "id": "arandanos", "nombre": "Arándanos", "precio": 4, "antelacionDias": 0, "frutaFresca": true },
+    { "id": "macarons", "nombre": "Macarons", "precio": 7, "antelacionDias": 1, "frutaFresca": false },
+    { "id": "figura-corazon", "nombre": "Figura de corazón", "precio": 6, "antelacionDias": 2, "frutaFresca": false },
+    { "id": "cartel", "nombre": "Cartel con el mensaje", "precio": 4, "antelacionDias": 1, "frutaFresca": false }
+  ],
+  "mensaje": {
+    "maxCaracteres": 30,
+    "precio": 3,
+    "comentario": "El mensaje se escribe sobre la torta, o en el cartel si se elige ese topper."
+  },
+  "reglas": [
+    {
+      "id": "fruta-fresca-pisos",
+      "mensaje": "Con relleno de fruta fresca la torta admite como máximo 2 pisos (la fruta no aguanta más peso).",
+      "si": [{ "campo": "rellenoFrutaFresca", "igual": true }],
+      "entonces": { "campo": "pisos", "max": 2 }
+    },
+    {
+      "id": "naked-sin-acabado",
+      "mensaje": "Un naked cake no lleva cobertura lateral, así que solo admite acabado liso.",
+      "si": [{ "campo": "cobertura", "igual": "naked" }],
+      "entonces": { "campo": "acabado", "en": ["liso"] }
+    },
+    {
+      "id": "glaseado-liso",
+      "mensaje": "El glaseado es líquido: solo puede ser liso.",
+      "si": [{ "campo": "cobertura", "igual": "glaseado" }],
+      "entonces": { "campo": "acabado", "en": ["liso"] }
+    },
+    {
+      "id": "fondant-sin-borlas",
+      "mensaje": "Sobre fondant no se hacen borlas de manga; elige rosetones o borde.",
+      "si": [{ "campo": "cobertura", "igual": "fondant" }],
+      "entonces": { "campo": "decoraciones", "noIncluye": "borlas" }
+    },
+    {
+      "id": "corazon-pisos",
+      "mensaje": "La forma de corazón se hace hasta 3 pisos.",
+      "si": [{ "campo": "forma", "igual": "corazon" }],
+      "entonces": { "campo": "pisos", "max": 3 }
+    },
+    {
+      "id": "pequena-pisos",
+      "mensaje": "La torta pequeña admite como máximo 3 pisos.",
+      "si": [{ "campo": "tamano", "igual": "s" }],
+      "entonces": { "campo": "pisos", "max": 3 }
+    }
+  ]
+}

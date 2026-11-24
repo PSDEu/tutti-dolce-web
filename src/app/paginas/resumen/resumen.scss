@@ -1,0 +1,111 @@
+.pagina {
+  padding: 2.5rem 0;
+}
+
+.rejilla {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.imagen {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  background: radial-gradient(ellipse at 50% 40%, #fff, var(--crema));
+
+  img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+  }
+
+  td-torta-3d {
+    aspect-ratio: 4 / 3;
+    height: auto;
+  }
+}
+
+dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 1rem;
+  margin: 0 0 1rem;
+}
+
+dt {
+  font-weight: 700;
+  color: var(--salvia-oscuro);
+}
+
+dd {
+  margin: 0;
+}
+
+.totales {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--rubor);
+
+  small {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--rosa-profundo);
+  }
+
+  strong {
+    font-family: var(--fuente-titulos);
+    font-size: 1.8rem;
+    color: var(--salvia-oscuro);
+    text-transform: capitalize;
+  }
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.formulario {
+  max-width: 860px;
+}
+
+.columnas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0 1rem;
+}
+
+.nota {
+  color: var(--rosa-profundo);
+  font-size: 0.9rem;
+}
+
+.error-campo {
+  color: var(--error);
+}
+
+.enviado {
+  max-width: 640px;
+  margin: 2rem auto;
+  text-align: center;
+
+  .codigo {
+    font-family: var(--fuente-titulos);
+    font-size: 1.6rem;
+    color: var(--rosa-profundo);
+  }
+
+  .boton {
+    margin: 0.4rem;
+  }
+}

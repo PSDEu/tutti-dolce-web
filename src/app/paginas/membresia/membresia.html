@@ -1,0 +1,60 @@
+<div class="contenedor pagina">
+  @if (enviado()) {
+    <section class="tarjeta centro" role="status">
+      <h1>¡Casi está!</h1>
+      <p>Te hemos enviado un email a <strong>{{ datos.email }}</strong>. Pulsa el enlace para confirmar tu suscripción.</p>
+      <p class="nota">Si no lo ves en unos minutos, mira en la carpeta de spam o promociones.</p>
+    </section>
+  } @else {
+    <h1>Únete gratis</h1>
+    <p class="intro">Guarda tus diseños, sigue tus pedidos y, si quieres, recibe novedades y un regalo en tu cumpleaños.</p>
+    <form class="tarjeta" #f="ngForm" (ngSubmit)="f.valid && enviar()">
+      <div class="campo">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" name="nombre" required autocomplete="given-name" [(ngModel)]="datos.nombre" />
+      </div>
+      <div class="campo">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required email autocomplete="email" [(ngModel)]="datos.email" />
+      </div>
+      <fieldset class="cumple">
+        <legend>Tu cumpleaños (opcional, sin el año)</legend>
+        <div class="campo">
+          <label for="dia">Día</label>
+          <select id="dia" name="dia" [(ngModel)]="datos.cumpleDia">
+            <option [ngValue]="null">—</option>
+            @for (d of dias; track d) {
+              <option [ngValue]="d">{{ d }}</option>
+            }
+          </select>
+        </div>
+        <div class="campo">
+          <label for="mes">Mes</label>
+          <select id="mes" name="mes" [(ngModel)]="datos.cumpleMes">
+            <option [ngValue]="null">—</option>
+            @for (m of meses; track m; let i = $index) {
+              <option [ngValue]="i + 1">{{ m }}</option>
+            }
+          </select>
+        </div>
+      </fieldset>
+      <label class="casilla">
+        <input type="checkbox" name="aceptaNewsletter" [(ngModel)]="datos.aceptaNewsletter" />
+        <span>Quiero recibir novedades, ofertas y el regalo de cumpleaños por email. Puedo darme de baja en cualquier momento.</span>
+      </label>
+      <label class="casilla">
+        <input type="checkbox" name="aceptaPrivacidad" required [(ngModel)]="datos.aceptaPrivacidad" />
+        <span>He leído y acepto la <a routerLink="/privacidad" target="_blank">política de privacidad</a>.</span>
+      </label>
+      @if (error()) {
+        <p class="aviso error" role="alert">{{ error() }}</p>
+      }
+      <button type="submit" class="boton salvia" [disabled]="!f.valid || enviando() || !fechaValida()">
+        {{ enviando() ? 'Enviando…' : 'Unirme' }}
+      </button>
+      @if (!fechaValida()) {
+        <p class="nota">Elige día y mes válidos, o ninguno de los dos.</p>
+      }
+    </form>
+  }
+</div>
