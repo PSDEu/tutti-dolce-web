@@ -1,59 +1,50 @@
-# TuttiDolceWeb
+# Tutti Dolce · Web con configurador 3D de tortas
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.3.0.
+Web de **Tutti Dolce Pastelería**: el cliente diseña su torta en 3D (forma, bizcocho, pisos, relleno, cobertura, decoración…), la ve **por dentro**, conoce el **precio** y la **fecha de entrega** al momento y envía la solicitud a la pastelería como una orden de trabajo clara.
 
-## Development server
+Proyecto construido paso a paso como curso gratuito. Cada paso está explicado en [`docs/`](docs/00_indice.md).
 
-To start a local development server, run:
+## Qué incluye
 
-```bash
-ng serve
+| Parte | Tecnología | Dónde |
+|---|---|---|
+| Web | Angular 22 (standalone, signals, control flow nuevo) | `src/` |
+| 3D | Three.js 0.187 (geometría generada por código) | `src/app/three/` |
+| Catálogo, precios y reglas | JSON editable sin tocar código | `src/app/core/catalogo/tortas.json` |
+| API | Spring Boot 4.2 · Java 25 · PostgreSQL 19 · Flyway | `backend/` |
+| Emails y newsletter | Brevo (API v3) | `backend/.../notificaciones/` |
+| Automatizaciones | n8n en Docker + Claude para los borradores de redes | `automatizaciones/n8n/` |
+
+## Arrancar en local
+
+Requisitos: Node 26 LTS, Yarn 1.22, Java 25, Docker Desktop.
+
+```powershell
+docker compose up -d db
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```powershell
+cd backend; $env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-25.0.5.10002-hotspot"; .\mvnw spring-boot:run
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
+```powershell
+yarn install; yarn start
 ```
 
-## Building
+Abre http://localhost:4200. La web redirige `/api` a `localhost:8080` (ver `proxy.conf.json`).
 
-To build the project run:
+Todo con Docker (base de datos, API y n8n): `docker compose up -d` (antes, crea `.env` a partir de `backend/.env.example`).
 
-```bash
-ng build
-```
+## Comandos útiles
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+| Comando | Qué hace |
+|---|---|
+| `yarn start` | Web en modo desarrollo |
+| `yarn test --watch=false` | Tests de la lógica (precio, reglas, fecha, enlaces) |
+| `yarn build` | Compilación de producción en `dist/` |
+| `yarn docs` | Referencia del código con Compodoc en `documentacion/` |
+| `cd backend; .\mvnw test` | Tests de la API contra un PostgreSQL real (Testcontainers) |
 
-## Running unit tests
+## Antes de publicar
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Ver [`docs/12_pendientes.md`](docs/12_pendientes.md): precios y reglas reales de la pastelería, textos, datos de contacto, revisión legal y permiso de la clienta para usar su marca.
